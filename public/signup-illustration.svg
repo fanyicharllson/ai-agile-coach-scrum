@@ -1,0 +1,23 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="200" cy="150" r="100" fill="#2563EB" fill-opacity="0.03"/>
+  
+  <g transform="translate(160, 80)">
+    <circle cx="40" cy="30" r="20" fill="#bfd3ffff"/>
+    <path d="M10 85C10 65 25 55 40 55C55 55 70 65 70 85V100H10V85Z" fill="#bfd3ffff"/>
+    <circle cx="70" cy="30" r="12" fill="white" stroke="#2563EB" stroke-width="2"/>
+    <path d="M70 25V35M65 30H75" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(80, 120)" opacity="0.4">
+    <circle cx="30" cy="20" r="15" fill="#bfd3ffff"/>
+    <path d="M5 60C5 45 15 40 30 40C45 40 55 45 55 60V70H5V60Z" fill="#bfd3ffff"/>
+  </g>
+
+  <g transform="translate(260, 120)" opacity="0.4">
+    <circle cx="30" cy="20" r="15" fill="#bfd3ffff"/>
+    <path d="M5 60C5 45 15 40 30 40C45 40 55 45 55 60V70H5V60Z" fill="#bfd3ffff"/>
+  </g>
+
+  <path d="M140 160C110 160 110 160 110 160" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M260 160C290 160 290 160 290 160" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4"/>
+</svg>

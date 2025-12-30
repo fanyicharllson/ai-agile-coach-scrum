@@ -1,26 +1,353 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 0 0% 100%; /* White */
+  --foreground: 0 0% 0%;   /* Black */
+  
+  /* Card & Popover */
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  
+  /* Primary/Accent - Blue */
+  --primary: 221.2 83.2% 53.3%; /* Tailwind's blue-600 */
+  --primary-foreground: 0 0% 100%; /* White text on blue */
+  
+  /* Secondary */
+  --secondary: 210 40% 96.1%; /* Tailwind's blue-50/gray-50 */
+  --secondary-foreground: 222.2 47.4% 11.2%; /* Dark text */
+  
+  /* Muted */
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%; /* Tailwind's gray-500 */
+  
+  /* Accent (same as primary for consistency) */
+  --accent: 221.2 83.2% 53.3%; /* Same as primary */
+  --accent-foreground: 0 0% 100%; /* White text on blue */
+  
+  /* Destructive */
+  --destructive: 0 84.2% 60.2%; /* Tailwind's red-500 */
+  --destructive-foreground: 0 0% 100%;
+  
+  /* UI Elements */
+  --border: 214.3 31.8% 91.4%; /* Tailwind's gray-200 */
+  --input: 0 0% 100%; /* White */
+  --ring: 221.2 83.2% 53.3%; /* Blue for focus rings */
+  
+  /* Border Radius */
+  --radius: 0.5rem;
+  
+  /* Sidebar */
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 0 0% 0%;
+  --sidebar-primary: 221.2 83.2% 53.3%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 40% 96.1%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-border: 214.3 31.8% 91.4%;
+  --sidebar-ring: 221.2 83.2% 53.3%;
+}
+
+.dark {
+  --background: 0 0% 4%;     /* #0a0a0a */
+  --foreground: 0 0% 98%;    /* #fafafa */
+  
+  /* Card & Popover */
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 98%;
+  
+  /* Primary/Accent - Brighter blue for dark mode */
+  --primary: 217.2 91.2% 59.8%; /* Lighter blue */
+  --primary-foreground: 222.2 47.4% 11.2%; /* Dark text on light blue */
+  
+  /* Secondary */
+  --secondary: 217.2 32.6% 17.5%; /* Dark blue-gray */
+  --secondary-foreground: 210 40% 98%; /* Light text */
+  
+  /* Muted */
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%; /* Lighter gray */
+  
+  /* Accent */
+  --accent: 217.2 91.2% 59.8%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  
+  /* Destructive */
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  
+  /* UI Elements */
+  --border: 217.2 32.6% 17.5%; /* Dark borders */
+  --input: 0 0% 4%; /* Dark inputs */
+  --ring: 224.3 76.3% 48%; /* Brighter blue for dark mode focus */
+  
+  /* Sidebar */
+  --sidebar: 0 0% 4%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 217.2 91.2% 59.8%;
+  --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+  --sidebar-accent: 217.2 32.6% 17.5%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+  --sidebar-ring: 224.3 76.3% 48%;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Base Colors */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  /* Card & Popover */
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  
+  /* Primary/Accent */
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  /* Secondary */
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  /* Muted */
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  
+  /* Accent */
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  /* Destructive */
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  
+  /* UI Elements */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  
+  /* Border Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Sidebar */
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Custom scrollbar - Blue themed */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-blue-300/50 rounded-full border-2 border-transparent bg-clip-padding;
+    transition: background-color 0.2s ease;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-400;
+  }
+  
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-blue-700/50;
+  }
+  
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-600;
+  }
+  
+  /* Selection color */
+  ::selection {
+    @apply bg-blue-500/20 text-blue-900;
+  }
+  
+  .dark ::selection {
+    @apply bg-blue-400/30 text-blue-100;
+  }
+  
+  /* Smooth focus outlines */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Brand utilities - Blue themed */
+  .brand-gradient {
+    background: linear-gradient(135deg, 
+      hsl(221.2, 83.2%, 53.3%) 0%, 
+      hsl(217.2, 91.2%, 59.8%) 100%);
+  }
+  
+  .brand-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500;
+  }
+  
+  .dark .brand-gradient-text {
+    @apply bg-gradient-to-r from-blue-400 to-blue-300;
+  }
+  
+  /* Solid brand colors */
+  .brand-bg {
+    @apply bg-blue-600;
+  }
+  
+  .dark .brand-bg {
+    @apply bg-blue-500;
+  }
+  
+  .brand-text {
+    @apply text-blue-600;
+  }
+  
+  .dark .brand-text {
+    @apply text-blue-400;
+  }
+  
+  .brand-border {
+    @apply border-blue-600;
+  }
+  
+  .dark .brand-border {
+    @apply border-blue-500;
+  }
+  
+  .brand-ring {
+    @apply ring-blue-600;
+  }
+  
+  .dark .brand-ring {
+    @apply ring-blue-500;
+  }
+  
+  /* Glass effect */
+  .glass {
+    @apply backdrop-blur-md bg-white/80 dark:bg-black/60 border border-white/20 dark:border-white/10;
+  }
+  
+  /* Text shadows */
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Animation utilities */
+  .animate-in {
+    animation: animate-in 0.3s ease-out;
+  }
+  
+  .fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+  
+  .slide-in-from-top {
+    animation: slide-in-from-top 0.3s ease-out;
+  }
+  
+  .slide-in-from-bottom {
+    animation: slide-in-from-bottom 0.3s ease-out;
+  }
+  
+  /* Keyframes */
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-in-from-top {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-in-from-bottom {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  /* Grid patterns */
+  .grid-pattern {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  .dark .grid-pattern {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
+  }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
