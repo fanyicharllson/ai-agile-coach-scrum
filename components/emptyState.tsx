@@ -1,7 +1,5 @@
-'use client';
-
-import React from 'react';
-import { Sparkles, Target, Users, BarChart3 } from 'lucide-react';
+"use client";
+import { Sparkles, Target, Users, BarChart3 } from "lucide-react";
 
 interface EmptyStateProps {
   onSuggestionClick: (suggestion: string) => void;
@@ -11,18 +9,19 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
   const suggestions = [
     {
       icon: Target,
-      text: 'Help me create a sprint goal',
-      prompt: 'Help me create a sprint goal for my team',
+      text: "Help me create a sprint goal",
+      prompt: "Help me create a sprint goal for my team",
     },
     {
       icon: Users,
-      text: 'Generate user stories',
-      prompt: 'Generate user stories for an e-commerce checkout feature',
+      text: "Generate user stories",
+      prompt: "Generate user stories for an e-commerce checkout feature",
     },
     {
       icon: BarChart3,
-      text: 'Plan a retrospective',
-      prompt: 'What are some effective retrospective activities for a remote team?',
+      text: "Plan a retrospective",
+      prompt:
+        "What are some effective retrospective activities for a remote team?",
     },
   ];
 
@@ -34,17 +33,17 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg mb-4">
             <Sparkles className="w-10 h-10 text-white" />
           </div>
-          
+
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-            Welcome to{' '}
+            Welcome to{" "}
             <span className="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               AgileMentor AI
             </span>
           </h1>
-          
+
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Your AI-powered Scrum Coach. Get instant help with sprint planning, user stories, 
-            retrospectives, and all things Agile.
+            Your AI-powered Scrum Coach. Get instant help with sprint planning,
+            user stories, retrospectives, and all things Agile.
           </p>
         </div>
 

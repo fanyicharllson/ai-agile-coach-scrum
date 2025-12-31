@@ -1,77 +1,59 @@
-"use client";
+"use client"
 
-import React, { useState } from "react";
-import { Copy, Edit2, RotateCcw, Check } from "lucide-react";
-import type { Message } from "@/types";
+import { useState } from "react"
+import { Copy, Edit2, RotateCcw, Check } from "lucide-react"
+import type { Message } from "@/types"
 
 interface MessageBubbleProps {
-  message: Message;
-  onEdit?: (messageId: string, newContent: string) => void;
-  onResend?: (messageId: string) => void;
+  message: Message
+  onEdit?: (messageId: string, newContent: string) => void
+  onResend?: (messageId: string) => void
 }
 
-export function MessageBubble({
-  message,
-  onEdit,
-  onResend,
-}: MessageBubbleProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(message.content);
-  const [copied, setCopied] = useState(false);
+export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps) {
+  const [isEditing, setIsEditing] = useState(false)
+  const [editContent, setEditContent] = useState(message.content)
+  const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(message.content);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    await navigator.clipboard.writeText(message.content)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleSaveEdit = () => {
     if (onEdit && editContent.trim()) {
-      onEdit(message.id, editContent);
-      setIsEditing(false);
+      onEdit(message.id, editContent)
+      setIsEditing(false)
     }
-  };
+  }
 
   const handleCancelEdit = () => {
-    setEditContent(message.content);
-    setIsEditing(false);
-  };
+    setEditContent(message.content)
+    setIsEditing(false)
+  }
 
-  const isUser = message.role === "user";
+  const isUser = message.role === "user"
 
   return (
-    <div
-      className={`flex gap-3 ${
-        isUser ? "justify-end" : "justify-start"
-      } mb-6 group`}
-    >
-      {/* Avatar for Assistant */}
-      {!isUser && (
-        <div className="shrink-0 w-8 h-8 rounded-full bg-linear-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
-          AM
+    <div className={`flex gap-4 justify-start mb-8 group`}>
+      <div className="shrink-0 pt-1">
+        <div
+          className={`w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm bg-[#0070B8] dark:bg-[#0091E0]`}
+        >
+          {isUser ? "You" : "AM"}
         </div>
-      )}
+      </div>
 
-      <div
-        className={`flex flex-col ${
-          isUser ? "items-end" : "items-start"
-        } max-w-3xl`}
-      >
+      <div className="flex flex-col items-start flex-1 max-w-4xl">
         {/* Role Label */}
         <div className="flex items-center gap-2 mb-2">
+          <span className="text-[15px] font-bold text-gray-900 dark:text-gray-100">
+            {isUser ? "You" : "AgileMentor AI"}
+          </span>
           {!isUser && (
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              AgileMentor AI
-            </span>
-          )}
-          {!isUser && (
-            <span className="px-2 py-0.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 text-xs font-medium rounded">
+            <span className="px-2 py-0.5 bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 text-[11px] font-semibold rounded">
               Scrum Coach
-            </span>
-          )}
-          {isUser && (
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              You
             </span>
           )}
         </div>
@@ -102,14 +84,8 @@ export function MessageBubble({
             </div>
           </div>
         ) : (
-          <div
-            className={`px-5 py-3.5 rounded-2xl shadow-sm ${
-              isUser
-                ? "bg-blue-600 text-white rounded-tr-sm"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-tl-sm"
-            }`}
-          >
-            <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
+          <div className="w-full">
+            <p className="text-[15px] leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
               {message.content}
             </p>
           </div>
@@ -117,48 +93,37 @@ export function MessageBubble({
 
         {/* Actions */}
         {!isEditing && (
-          <div className="flex gap-1 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex gap-4 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleCopy}
-              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Copy message"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#008A9E] hover:bg-[#007687] text-white text-xs font-semibold rounded-lg transition-colors"
             >
-              {copied ? (
-                <Check className="w-4 h-4 text-green-600" />
-              ) : (
-                <Copy className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-              )}
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              <span>Copy</span>
             </button>
 
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="Edit message"
+                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold"
               >
-                <Edit2 className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <Edit2 className="w-3.5 h-3.5" />
+                <span>Edit</span>
               </button>
             )}
 
             {isUser && onResend && (
               <button
                 onClick={() => onResend(message.id)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="Re-ask"
+                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold"
               >
-                <RotateCcw className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Re-ask</span>
               </button>
             )}
           </div>
         )}
       </div>
-
-      {/* Avatar for User */}
-      {isUser && (
-        <div className="shrink-0 w-8 h-8 rounded-full bg-linear-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
-          You
-        </div>
-      )}
     </div>
-  );
+  )
 }

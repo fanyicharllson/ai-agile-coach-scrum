@@ -1,8 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronRight, Plus, Search, Pin, FolderOpen } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import {
+  ChevronRight,
+  Plus,
+  Search,
+  Pin,
+  FolderOpen,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { useSessions, useCreateSession } from "@/hooks/useChat";
+import { useTheme } from "@/contexts/ThemeContext";
 import type { Session } from "@/types";
 
 interface SidebarProps {
@@ -10,6 +20,7 @@ interface SidebarProps {
   onToggle: () => void;
   currentSessionId: string | null;
   onSessionSelect: (sessionId: string) => void;
+  onNewChat?: () => void;
 }
 
 export function Sidebar({
@@ -17,7 +28,9 @@ export function Sidebar({
   onToggle,
   currentSessionId,
   onSessionSelect,
+  onNewChat,
 }: SidebarProps) {
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedSections, setExpandedSections] = useState({
     pinned: true,
@@ -33,58 +46,73 @@ export function Sidebar({
   };
 
   const handleNewSession = () => {
+    if (onNewChat) {
+      onNewChat();
+    }
     createSession.mutate("General");
   };
 
   const pinnedSessions = sessions?.filter((s) => s.isPinned) || [];
   const recentSessions = sessions?.filter((s) => !s.isPinned) || [];
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={onToggle}
-        className="fixed left-4 top-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-200"
-        aria-label="Open sidebar"
-      >
-        <ChevronRight className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-      </button>
-    );
-  }
-
   return (
     <>
       {/* Mobile Overlay */}
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
+        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-40 transition-opacity duration-300 lg:hidden ${
+          isOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
+        }`}
         onClick={onToggle}
       />
 
+      {/* Toggle Button for when sidebar is closed */}
+      {!isOpen && (
+        <button
+          onClick={onToggle}
+          className="fixed left-4 top-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-200"
+          aria-label="Open sidebar"
+        >
+          <ChevronRight className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
+
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-80 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-50 flex flex-col shadow-2xl lg:shadow-none">
+      <aside
+        className={`fixed left-0 top-0 h-full w-80 bg-white dark:bg-[#050505] border-r border-gray-200 dark:border-gray-800 z-50 flex flex-col shadow-2xl lg:shadow-none transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-xl font-bold text-[#0070B8] dark:text-[#00A3FF]">
               AgileMentor AI
             </h1>
+            {/* Theme Toggle */}
             <button
-              onClick={onToggle}
-              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors lg:hidden"
-              aria-label="Close sidebar"
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+              aria-label="Toggle theme"
             >
-              <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400 rotate-180" />
+              {theme === "light" ? (
+                <Moon className="w-5 h-5 text-gray-500" />
+              ) : (
+                <Sun className="w-5 h-5 text-gray-400" />
+              )}
             </button>
           </div>
 
           {/* Search */}
-          <div className="relative">
+          <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search sprint sessions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-white dark:bg-transparent border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#0070B8] transition-all"
             />
           </div>
 
@@ -92,7 +120,7 @@ export function Sidebar({
           <button
             onClick={handleNewSession}
             disabled={createSession.isPending}
-            className="w-full mt-3 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 bg-[#0070B8] dark:bg-[#0091E0] hover:bg-[#005a96] dark:hover:bg-[#007cbd] text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4" />
             New Sprint Session
@@ -100,7 +128,7 @@ export function Sidebar({
         </div>
 
         {/* Sessions List */}
-        <div className="flex-1 overflow-y-auto py-2">
+        <div className="flex-1 overflow-y-auto py-2 px-2">
           {isLoading ? (
             <div className="px-4 py-8 text-center">
               <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
