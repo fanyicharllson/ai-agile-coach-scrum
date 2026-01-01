@@ -146,3 +146,50 @@
     #2563eb
   ); /* solid blue on hover */
 }
+
+/* Toast Custom Styles */
+[data-sonner-toast] {
+  font-family: inherit !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  border-left: 3px solid #10b981 !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  border-left: 3px solid #ef4444 !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  border-left: 3px solid #f59e0b !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  border-left: 3px solid #3b82f6 !important;
+}
+
+[data-sonner-toast][data-type="loading"] {
+  border-left: 3px solid #6b7280 !important;
+}
+
+/* Toast in dark mode */
+.dark [data-sonner-toast] {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Toast in light mode */
+[data-sonner-toast] {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Toast close button */
+[data-sonner-toast] [data-close-button] {
+  border: none !important;
+  background: transparent !important;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  opacity: 1;
+}

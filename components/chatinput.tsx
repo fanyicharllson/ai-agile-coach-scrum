@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
-import { Send } from "lucide-react"
+import { Send, Loader2 } from "lucide-react"
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -54,7 +54,7 @@ export function ChatInput({ onSend, disabled = false, placeholder = "Ask your Ag
             placeholder={placeholder}
             disabled={disabled}
             rows={1}
-            className="flex-1 px-5 py-4 bg-transparent border-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:outline-none disabled:opacity-50"
+            className="flex-1 px-5 py-4 bg-transparent  border-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:outline-none disabled:opacity-50"
             style={{ maxHeight: "150px" }}
           />
 
@@ -64,7 +64,11 @@ export function ChatInput({ onSend, disabled = false, placeholder = "Ask your Ag
             className="mr-3 p-2 bg-[#0070B8] dark:bg-[#0091E0] hover:bg-[#005a96] disabled:bg-gray-200 dark:disabled:bg-gray-800 text-white rounded-lg transition-colors shrink-0"
             aria-label="Send message"
           >
-            <Send className="w-5 h-5" />
+            {disabled ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <Send className="w-5 h-5" />
+            )}
           </button>
         </div>
 

@@ -1,39 +1,43 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Copy, Edit2, RotateCcw, Check } from "lucide-react"
-import type { Message } from "@/types"
+import { useState } from "react";
+import { Copy, Edit2, RotateCcw, Check } from "lucide-react";
+import type { Message } from "@/types";
 
 interface MessageBubbleProps {
-  message: Message
-  onEdit?: (messageId: string, newContent: string) => void
-  onResend?: (messageId: string) => void
+  message: Message;
+  onEdit?: (messageId: string, newContent: string) => void;
+  onResend?: (messageId: string) => void;
 }
 
-export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps) {
-  const [isEditing, setIsEditing] = useState(false)
-  const [editContent, setEditContent] = useState(message.content)
-  const [copied, setCopied] = useState(false)
+export function MessageBubble({
+  message,
+  onEdit,
+  onResend,
+}: MessageBubbleProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(message.content);
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(message.content)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSaveEdit = () => {
     if (onEdit && editContent.trim()) {
-      onEdit(message.id, editContent)
-      setIsEditing(false)
+      onEdit(message.id, editContent);
+      setIsEditing(false);
     }
-  }
+  };
 
   const handleCancelEdit = () => {
-    setEditContent(message.content)
-    setIsEditing(false)
-  }
+    setEditContent(message.content);
+    setIsEditing(false);
+  };
 
-  const isUser = message.role === "user"
+  const isUser = message.role === "user";
 
   return (
     <div className={`flex gap-4 justify-start mb-8 group w-full`}>
@@ -71,13 +75,13 @@ export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps)
             <div className="flex gap-2 mt-2">
               <button
                 onClick={handleSaveEdit}
-                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
+                className="px-3 py-1.5 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
               >
                 Save
               </button>
               <button
                 onClick={handleCancelEdit}
-                className="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg transition-colors"
+                className="px-3 py-1.5 bg-gray-200 cursor-pointer dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 text-sm rounded-lg transition-colors"
               >
                 Cancel
               </button>
@@ -85,7 +89,7 @@ export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps)
           </div>
         ) : (
           <div className="w-full wrap-break-word">
-            <p className="text-[15px] leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-wrap-anywhere">
+            <p className={`text-[15px] leading-relaxed text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-wrap-anywhere ${isUser ? "font-medium" : "font-normal italic"}`}>
               {message.content}
             </p>
           </div>
@@ -96,16 +100,20 @@ export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps)
           <div className="flex gap-4 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#008A9E] hover:bg-[#007687] text-white text-xs font-semibold rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#008A9E] hover:bg-[#007687] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
             >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>Copy</span>
+              {copied ? (
+                <Check className="w-3.5 h-3.5" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+              <span>{copied ? "Copied" : "Copy"}</span>
             </button>
 
             {isUser && onEdit && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold"
+                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold cursor-pointer"
               >
                 <Edit2 className="w-3.5 h-3.5" />
                 <span>Edit</span>
@@ -115,7 +123,7 @@ export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps)
             {isUser && onResend && (
               <button
                 onClick={() => onResend(message.id)}
-                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold"
+                className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors text-xs font-semibold cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Re-ask</span>
@@ -125,5 +133,5 @@ export function MessageBubble({ message, onEdit, onResend }: MessageBubbleProps)
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -17,7 +17,7 @@ export function LoadingIndicator() {
           </span>
         </div>
 
-        <div className="px-5 py-4 bg-gray-200 dark:bg-gray-800 rounded-2xl rounded-tl-sm shadow-sm">
+        <div className="px-4 py-3 bg-gray-200 dark:bg-gray-800 rounded-2xl rounded-tl-sm shadow-sm">
           <div className="flex gap-1.5">
             <div
               className="w-2 h-2 bg-gray-600 dark:bg-gray-400 rounded-full animate-bounce"

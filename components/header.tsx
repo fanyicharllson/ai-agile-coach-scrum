@@ -4,6 +4,7 @@ import { Grid3x3, Bell, Plus } from "lucide-react";
 interface HeaderProps {
   sessionTitle?: string;
   sessionCategory?: string;
+  isOpen?: boolean;
   onNewChat?: () => void;
 }
 
@@ -11,12 +12,13 @@ export function Header({
   sessionTitle,
   sessionCategory,
   onNewChat,
+  isOpen,
 }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-white dark:bg-[#050505] border-b border-gray-200 dark:border-gray-800">
       <div className="px-6 py-4 flex items-center justify-between">
         {/* Session Info */}
-        <div className="flex items-center gap-3">
+        <div className={`flex items-center gap-3 ${!isOpen && "ml-10"}`}>
           {sessionCategory && (
             <span className="px-3 py-1 bg-[#E1F3FF] dark:bg-[#004266] text-[#0070B8] dark:text-[#E1F3FF] text-xs font-semibold rounded-full">
               {sessionCategory}
