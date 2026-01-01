@@ -72,8 +72,38 @@ export function ChatInput({ onSend, disabled = false, placeholder = "Ask your Ag
           </button>
         </div>
 
-        <p className="mt-3 text-[11px] text-gray-400 dark:text-gray-500">
-          Press Enter to send, Shift+Enter for new line
+        <div className="mt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-gray-400 dark:text-gray-500">
+          {/* Left side - Keyboard shortcuts */}
+          <div className="flex items-center gap-1">
+            <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-[10px] font-mono border border-gray-300 dark:border-gray-700">
+              Enter
+            </kbd>
+            <span>to send</span>
+            <span className="mx-1">•</span>
+            <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-[10px] font-mono border border-gray-300 dark:border-gray-700">
+              Shift + Enter
+            </kbd>
+            <span>for new line</span>
+          </div>
+
+          {/* Right side - Attribution and copyright */}
+          <div className="flex items-center gap-3 text-center sm:text-right">
+            <span className="flex items-center gap-1">
+              Powered by{" "}
+              <span className="font-semibold text-blue-600 dark:text-blue-400">
+                Gemini AI
+              </span>
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <span>
+              © {new Date().getFullYear()} AgileMentor
+            </span>
+          </div>
+        </div>
+
+        {/* Disclaimer */}
+        <p className="mt-2 text-[10px] text-gray-400 dark:text-gray-500 text-center max-w-3xl mx-auto">
+          AI can make mistakes. Please verify important information and consult with your team for critical decisions.
         </p>
       </form>
     </div>

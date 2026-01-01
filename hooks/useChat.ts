@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Only used for success toasts now
 import {
   sendMessage,
   fetchSessions,
@@ -9,7 +9,6 @@ import {
   deleteSession,
   editMessage,
 } from "./apiFunction";
-
 
 /**
  * Send a message to the AI
@@ -25,11 +24,8 @@ export const useSendMessage = () => {
       // Invalidate the specific session's messages
       queryClient.invalidateQueries({ queryKey: ["messages", data.sessionId] });
     },
-    onError: (error) => {
-      console.error("Error sending message:", error);
-      toast.error("Failed to send message", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
+    meta: {
+      errorMessage: "Failed to send message",
     },
   });
 };
@@ -38,44 +34,32 @@ export const useSendMessage = () => {
  * Fetch all sessions
  */
 export const useSessions = (userId?: string) => {
-  const query = useQuery({
+  return useQuery({
     queryKey: ["sessions", userId],
     queryFn: () => fetchSessions(userId),
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: 2,
+    meta: {
+      errorMessage: "Failed to load sessions",
+    },
   });
-
-  // Handle errors with toast in React Query v5
-  if (query.isError) {
-    console.error("Error fetching sessions:", query.error);
-    toast.error("Failed to load sessions", {
-      description: query.error instanceof Error ? query.error.message : "Please try refreshing the page.",
-    });
-  }
-
-  return query;
 };
 
-/**
+/**r
  * Fetch messages for a specific session
  */
 export const useSessionMessages = (sessionId: string | null) => {
-  const query = useQuery({
+  return useQuery({
     queryKey: ["messages", sessionId],
     queryFn: () => fetchSessionMessages(sessionId!),
     enabled: !!sessionId, // Only fetch if sessionId exists
-    staleTime: 1000 * 60 * 2, // 2 minutes
+    staleTime: 1000 * 60 * 5, // 5 minutes - prevent refetching during active chat
+    refetchOnMount: false, // Don't refetch when component mounts with same sessionId
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+    meta: {
+      errorMessage: "Failed to load messages",
+    },
   });
-
-  // Handle errors with toast in React Query v5
-  if (query.isError) {
-    console.error("Error fetching messages:", query.error);
-    toast.error("Failed to load messages", {
-      description: query.error instanceof Error ? query.error.message : "Please try again.",
-    });
-  }
-
-  return query;
 };
 
 /**
@@ -87,16 +71,13 @@ export const useCreateSession = () => {
   return useMutation({
     mutationFn: createSession,
     onSuccess: (newSession) => {
-      // Invalidate sessions list
+      // Invalidate sessions list to show the new session in sidebar
       queryClient.invalidateQueries({ queryKey: ["sessions"] });
-      toast.success("New chat created");
+      // Don't show toast for lazy creation - it's confusing UX
       return newSession;
     },
-    onError: (error) => {
-      console.error("Error creating session:", error);
-      toast.error("Failed to create session", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
+    meta: {
+      errorMessage: "Failed to create session",
     },
   });
 };
@@ -115,11 +96,8 @@ export const useUpdateSession = () => {
       toast.success("Session updated");
       return updatedSession;
     },
-    onError: (error) => {
-      console.error("Error updating session:", error);
-      toast.error("Failed to update session", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
+    meta: {
+      errorMessage: "Failed to update session",
     },
   });
 };
@@ -137,11 +115,8 @@ export const useDeleteSession = () => {
       queryClient.invalidateQueries({ queryKey: ["sessions"] });
       toast.success("Session deleted");
     },
-    onError: (error) => {
-      console.error("Error deleting session:", error);
-      toast.error("Failed to delete session", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
+    meta: {
+      errorMessage: "Failed to delete session",
     },
   });
 };
@@ -160,11 +135,8 @@ export const useEditMessage = () => {
       queryClient.invalidateQueries({ queryKey: ["messages"] });
       toast.success("Message edited");
     },
-    onError: (error) => {
-      console.error("Error editing message:", error);
-      toast.error("Failed to edit message", {
-        description: error instanceof Error ? error.message : "Please try again.",
-      });
+    meta: {
+      errorMessage: "Failed to edit message",
     },
   });
 };
@@ -173,7 +145,7 @@ export const useEditMessage = () => {
  * Search sessions
  */
 export const useSearchSessions = (searchQuery: string, userId?: string) => {
-  const query = useQuery({
+  return useQuery({
     queryKey: ["sessions", "search", searchQuery, userId],
     queryFn: async () => {
       const url = userId
@@ -190,15 +162,8 @@ export const useSearchSessions = (searchQuery: string, userId?: string) => {
     },
     enabled: searchQuery.length > 0, // Only search if there's a query
     staleTime: 1000 * 30, // 30 seconds
+    meta: {
+      errorMessage: "Failed to load messages",
+    },
   });
-
-  // Handle errors with toast in React Query v5
-  if (query.isError) {
-    console.error("Search error:", query.error);
-    toast.error("Search failed", {
-      description: query.error instanceof Error ? query.error.message : "Please try again.",
-    });
-  }
-
-  return query;
 };

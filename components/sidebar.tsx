@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useSessions, useCreateSession } from "@/hooks/useChat";
 import { useTheme } from "@/contexts/ThemeContext";
+import UserProfile from "./userProfile";
 import type { Session } from "@/types";
 
 interface SidebarProps {
@@ -187,11 +188,9 @@ export function Sidebar({
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-800">
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-            Your AI-powered Scrum Coach
-          </p>
+        {/* Footer - User Profile */}
+        <div className="mt-auto border-t border-gray-200 dark:border-gray-800 p-3">
+          <UserProfile />
         </div>
       </aside>
     </>

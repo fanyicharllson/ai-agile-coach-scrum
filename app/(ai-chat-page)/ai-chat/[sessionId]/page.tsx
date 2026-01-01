@@ -4,10 +4,9 @@ interface PageProps {
   params: Promise<{ sessionId: string }>;
 }
 
-async function SessionPage({ params }: PageProps) {
+export default async function SessionPage({ params }: PageProps) {
   const { sessionId } = await params;
-  
+
+  // Pass sessionId to ChatInterface
   return <ChatInterface sessionId={sessionId} />;
 }
-
-export default SessionPage;

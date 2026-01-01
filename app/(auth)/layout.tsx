@@ -4,7 +4,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo/Brand Section */}
         <div className="text-center mb-8">
@@ -24,9 +24,9 @@ export default function AuthLayout({
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            CharlesEmpire Tech
+            AgileMentor AI
           </h1>
-          <p className="text-gray-600">Your Gateway to Software Excellence</p>
+          <p className="text-gray-600">Your AI-powered Scrum Coach</p>
         </div>
 
         {/* Auth Card */}
@@ -36,7 +36,7 @@ export default function AuthLayout({
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-6">
-          © 2025 CharlesEmpire Tech. All rights reserved.
+          © {new Date().getFullYear()} AgileMentor. All rights reserved.
         </p>
       </div>
     </div>

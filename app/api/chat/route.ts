@@ -3,6 +3,8 @@ import {
   createMessagePair,
   getSessionMessages,
   generateSessionTitle,
+  getSessionWithMessages,
+  createSession,
 } from "@/lib/db-operation";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -31,6 +33,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ==================== SESSION VALIDATION ====================
+    // Check if session exists (could have been deleted)
+    const existingSession = await getSessionWithMessages(sessionId);
+    let actualSessionId = sessionId;
+    let isNewSession = false;
+
+    if (!existingSession) {
+      // Session was deleted - create a new one
+      console.log(`Session ${sessionId} not found. Creating new session...`);
+      const newSession = await createSession({
+        userId: user.id,
+        title: "New Session",
+      });
+      actualSessionId = newSession.id;
+      isNewSession = true;
+    }
+
     // ==================== GEMINI API INTEGRATION ====================
     // Uncomment and configure when ready to use Gemini API
 
@@ -40,7 +59,7 @@ export async function POST(request: NextRequest) {
       try {
         const { GoogleGenerativeAI } = require("@google/generative-ai");
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
         const prompt = `You are an expert Agile and Scrum coach helping teams and students learn Agile practices.
         Be helpful, concise, and provide actionable advice.
@@ -72,27 +91,28 @@ Would you like me to elaborate on any of these points?`;
     // ==================== SAVE TO DATABASE ====================
     // Save both user message and assistant response
     const { userMsg, assistantMsg } = await createMessagePair({
-      sessionId,
+      sessionId: actualSessionId,
       userMessage: message,
       assistantMessage: aiResponse,
       metadata: {
-        model: "gemini-pro",
+        model: "gemini-2.5-flash-lite",
         userId: user.id,
       },
     });
 
     // Auto-generate session title if it's the first message
-    const messageCount = await getSessionMessages(sessionId);
+    const messageCount = await getSessionMessages(actualSessionId);
     if (messageCount.length === 2) {
       // First exchange - generate title
-      await generateSessionTitle(sessionId);
+      await generateSessionTitle(actualSessionId);
     }
 
     return NextResponse.json({
       message: aiResponse,
-      sessionId,
+      sessionId: actualSessionId,
       messageId: assistantMsg.id,
       userMessageId: userMsg.id,
+      isNewSession, // Flag to indicate if a new session was created
     });
   } catch (error) {
     console.error("Chat API error:", error);

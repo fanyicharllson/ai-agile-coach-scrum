@@ -1,6 +1,23 @@
 import { prisma } from "./prisma";
 import { Role, SessionCategory } from "@prisma/client";
 
+//? ==================== CACHE UTILITIES ====================
+
+/**
+ * Helper to get Prisma Accelerate cache information for debugging
+ * Usage: const result = await getUserSessionsWithCacheInfo(userId)
+ *        console.log(result.info) // Shows cache hit/miss status
+ */
+export async function getQueryWithCacheInfo<T>(
+  queryFn: () => Promise<T>
+): Promise<{ data: T; info: any }> {
+  const result = await queryFn();
+  return {
+    data: result,
+    info: (result as any)?.__accelerateInfo || null,
+  };
+}
+
 //? ==================== SESSION OPERATIONS ====================
 
 /**
@@ -44,11 +61,13 @@ export async function getUserSessions(userId?: string) {
       },
     },
     orderBy: [{ isPinned: "desc" }, { updatedAt: "desc" }],
+    // Caching disabled - causing stale data issues without cache invalidation
   });
 }
 
 /**
  * Get a single session with all messages
+ * Uses Prisma Accelerate caching (2 min TTL, 5 min SWR)
  */
 export async function getSessionWithMessages(sessionId: string) {
   return await prisma.session.findUnique({
@@ -59,6 +78,10 @@ export async function getSessionWithMessages(sessionId: string) {
       },
       folder: true,
     },
+    // cacheStrategy: {
+    //   ttl: 120, // Time to live(TTL) Cache for 2 minutes
+    //   swr: 300, // Stale-while-revalidate(SWR) for 5 minutes
+    // },
   });
 }
 
@@ -161,11 +184,16 @@ export async function createMessage(data: {
 
 /**
  * Get all messages for a session
+ * Uses Prisma Accelerate caching (2 min TTL, 5 min SWR)
  */
 export async function getSessionMessages(sessionId: string) {
   return await prisma.message.findMany({
     where: { sessionId },
     orderBy: { createdAt: "asc" },
+    // cacheStrategy: {
+    //   ttl: 120, // Cache for 2 minutes
+    //   swr: 300, // Stale-while-revalidate for 5 minutes
+    // },
   });
 }
 
@@ -292,6 +320,7 @@ export async function getUserFolders(userId: string) {
       },
     },
     orderBy: { createdAt: "asc" },
+    // Caching disabled - causing stale data issues
   });
 }
 

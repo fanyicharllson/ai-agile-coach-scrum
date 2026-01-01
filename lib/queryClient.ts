@@ -1,4 +1,5 @@
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, MutationCache } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -8,6 +9,17 @@ export function makeQueryClient() {
         refetchOnWindowFocus: false,
       },
     },
+    // Global mutation cache event listener - handles ALL mutation errors in one place
+    mutationCache: new MutationCache({
+      onError: (error: any, _variables, _context, mutation: any) => {
+        const message = error?.message || "An error occurred";
+        const title = mutation.options.meta?.errorMessage || "Operation failed";
+        
+        toast.error(title, {
+          description: message,
+        });
+      },
+    }),
   });
 }
 

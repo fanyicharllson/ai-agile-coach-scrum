@@ -26,4 +26,5 @@ export interface ChatResponse {
   message: string;
   sessionId: string;
   messageId: string;
+  isNewSession?: boolean;
 }

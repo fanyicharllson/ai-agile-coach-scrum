@@ -11,7 +11,7 @@ function ToasterProvider() {
   return (
     <Toaster 
       theme={theme}
-      position="top-right"
+      position="bottom-right"
       richColors
       closeButton
       expand={true}
