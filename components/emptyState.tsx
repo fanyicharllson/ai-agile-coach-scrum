@@ -1,11 +1,40 @@
 "use client";
 import { Sparkles, Target, Users, BarChart3 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useMemo } from "react";
 
 interface EmptyStateProps {
   onSuggestionClick: (suggestion: string) => void;
 }
 
 export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
+  const { user } = useUser();
+
+  // Get dynamic greeting based on time of day
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    if (hour < 21) return "Good evening";
+    return "Hello";
+  }, []);
+
+  // Get random dynamic message
+  const dynamicMessage = useMemo(() => {
+    const messages = [
+      "How can I help you today?",
+      "What are we working on today?",
+      "Ready to supercharge your sprint?",
+      "Let's make your team more agile!",
+      "What Agile challenge can I help with?",
+      "Let's plan something amazing!",
+    ];
+    return messages[Math.floor(Math.random() * messages.length)];
+  }, []);
+
+  // Get user's first name or fallback
+  const userName = user?.firstName || user?.fullName?.split(" ")[0] || "there";
+
   const suggestions = [
     {
       icon: Target,
@@ -35,15 +64,15 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
-            Welcome to{" "}
+            {greeting},{" "}
             <span className="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              AgileMentor AI
+              {userName}
             </span>
+            ! 👋
           </h1>
 
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Your AI-powered Scrum Coach. Get instant help with sprint planning,
-            user stories, retrospectives, and all things Agile.
+            {dynamicMessage}
           </p>
         </div>
 
@@ -53,7 +82,7 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
             <button
               key={index}
               onClick={() => onSuggestionClick(suggestion.prompt)}
-              className="group p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg transition-all duration-200 text-left"
+              className="group p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg cursor-pointer transition-all duration-200 text-left"
             >
               <suggestion.icon className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-3 group-hover:scale-110 transition-transform" />
               <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
