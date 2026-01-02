@@ -177,7 +177,6 @@ export function ChatInterface({
         sessionId = newSession.id;
         setCurrentSessionId(sessionId);
 
-        // NOW YOU CAN USE NORMAL NEXT.JS ROUTING!
         // Context persists state across navigation
         router.replace(`/ai-chat/${sessionId}`, { scroll: false });
       }
