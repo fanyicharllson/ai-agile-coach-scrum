@@ -54,7 +54,7 @@ export default function Home() {
                   src="/logo.png"
                   alt="AgileMentor AI Logo"
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   priority
                 />
               </div>
