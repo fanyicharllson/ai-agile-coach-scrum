@@ -43,6 +43,11 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  // Trial/Usage Tracking
+  messagesSent  Int       @default(0) // Track number of messages sent
+  trialLimit    Int       @default(3) // Default trial limit (3 messages)
+  isUnlimited   Boolean   @default(false) // Premium users with no limit
+
   // Relationships
   sessions Session[]
   folders  SessionFolder[]

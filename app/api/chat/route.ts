@@ -24,6 +24,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ==================== TRIAL LIMIT CHECK ====================
+    // Check if user has exceeded trial limit
+    if (!user.isUnlimited && user.messagesSent >= user.trialLimit) {
+      return NextResponse.json(
+        { 
+          error: "Trial limit reached",
+          message: "You've reached your trial message limit. Please contact us to continue using AgileMentor AI.",
+          remainingMessages: 0,
+          trialLimit: user.trialLimit
+        },
+        { status: 403 }
+      );
+    }
+
     const { message, sessionId } = await request.json();
 
     if (!message || !sessionId) {
@@ -100,6 +114,13 @@ Would you like me to elaborate on any of these points?`;
       },
     });
 
+    // Increment user's message count
+    const { prisma } = await import("@/lib/prisma");
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { messagesSent: { increment: 1 } }
+    });
+
     // Auto-generate session title if it's the first message
     const messageCount = await getSessionMessages(actualSessionId);
     if (messageCount.length === 2) {
@@ -107,12 +128,19 @@ Would you like me to elaborate on any of these points?`;
       await generateSessionTitle(actualSessionId);
     }
 
+    // Calculate remaining messages
+    const remainingMessages = user.isUnlimited 
+      ? -1 // Unlimited
+      : Math.max(0, user.trialLimit - (user.messagesSent + 1));
+
     return NextResponse.json({
       message: aiResponse,
       sessionId: actualSessionId,
       messageId: assistantMsg.id,
       userMessageId: userMsg.id,
       isNewSession, // Flag to indicate if a new session was created
+      remainingMessages, // Add remaining messages count
+      trialLimit: user.trialLimit,
     });
   } catch (error) {
     console.error("Chat API error:", error);

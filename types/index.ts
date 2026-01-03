@@ -27,4 +27,14 @@ export interface ChatResponse {
   sessionId: string;
   messageId: string;
   isNewSession?: boolean;
+  remainingMessages?: number;
+  trialLimit?: number;
+}
+
+export interface TrialStatus {
+  messagesSent: number;
+  trialLimit: number;
+  remainingMessages: number;
+  isUnlimited: boolean;
+  hasReachedLimit: boolean;
 }

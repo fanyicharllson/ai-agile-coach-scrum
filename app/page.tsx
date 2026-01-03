@@ -48,8 +48,8 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           {/* Logo and Title */}
           <div className="text-center mb-16">
-            <div className="flex justify-center mb-6">
-              <div className="relative w-full h-40 rounded-2xl shadow-2xl overflow-hidden ring-4 ring-white/50 dark:ring-white/10">
+            <div className="flex justify-center">
+              <div className="relative w-full h-40 ">
                 <Image
                   src="/logo.png"
                   alt="AgileMentor AI Logo"

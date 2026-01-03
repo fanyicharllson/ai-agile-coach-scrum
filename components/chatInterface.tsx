@@ -4,19 +4,21 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import type { Message } from "@/types";
+import type { Message, TrialStatus } from "@/types";
 import { ChatInput } from "./chatinput";
 import { EmptyState } from "./emptyState";
 import { Header } from "./header";
 import { LoadingIndicator } from "./loadingIndicator";
 import { MessageBubble } from "./messagebubble";
 import { Sidebar } from "./sidebar";
+import { TrialStatusBanner } from "./TrialStatusBanner";
 import {
   useSendMessage,
   useCreateSession,
   useSessionMessages,
 } from "@/hooks/useChat";
 import { useChatContext } from "@/contexts/ChatContext";
+import Image from "next/image";
 
 interface ChatInterfaceProps {
   sessionId?: string;
@@ -42,6 +44,7 @@ export function ChatInterface({
   } = useChatContext();
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [trialStatus, setTrialStatus] = useState<TrialStatus | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const sendMessageMutation = useSendMessage();
@@ -61,6 +64,26 @@ export function ChatInterface({
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Fetch trial status
+  const fetchTrialStatus = async () => {
+    try {
+      const response = await fetch("/api/user/trial-status");
+      if (response.ok) {
+        const data = await response.json();
+        setTrialStatus(data);
+      }
+    } catch (error) {
+      console.error("Error fetching trial status:", error);
+    }
+  };
+
+  // Load trial status when user is authenticated
+  useEffect(() => {
+    if (isSignedIn && user) {
+      fetchTrialStatus();
+    }
+  }, [isSignedIn, user]);
 
   // Handle sessionId changes from URL (switching sessions)
   useEffect(() => {
@@ -119,7 +142,7 @@ export function ChatInterface({
       <div className="flex flex-col space-y-4 min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <div className="text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <h1 className="text-3xl text-zinc-800 dark:text-zinc-200">
+          <h1 className="text-4xl text-[#0070B8] dark:text-[#00A3FF]">
             AgileMentor AI!
           </h1>
           <p className="mt-2 text-zinc-600 dark:text-zinc-400">
@@ -130,15 +153,97 @@ export function ChatInterface({
     );
   }
 
-  // Check authentication
-  if (!isSignedIn || !user) {
-    toast.error("Authentication required", {
-      description: "Please sign in to continue",
-    });
-    return null;
+  // Show error if authentication check failed
+  if (isLoaded && !isSignedIn) {
+    return (
+      <div className="flex flex-col space-y-4 min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+        <div className="text-center max-w-md px-6">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/20">
+              <svg
+                className="w-8 h-8 text-red-600 dark:text-red-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-2xl font-semibold text-zinc-800 dark:text-zinc-200 mb-2">
+            Authentication Required
+          </h1>
+          <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+            You need to be signed in to access AgileMentor AI. Please sign in to
+            continue.
+          </p>
+          <button
+            onClick={() => router.push("/sign-in")}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Go to Sign In
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if user object is available
+  if (!user) {
+    return (
+      <div className="flex flex-col space-y-4 min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+        <div className="text-center max-w-md px-6">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 dark:bg-yellow-900/20">
+              <svg
+                className="w-8 h-8 text-yellow-600 dark:text-yellow-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+          <h1 className="text-2xl font-semibold text-zinc-800 dark:text-zinc-200 mb-2">
+            Unable to Load User
+          </h1>
+          <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+            We're having trouble loading your account. Please try refreshing the
+            page.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const handleSendMessage = async (content: string) => {
+    // Check trial limit first
+    if (trialStatus?.hasReachedLimit) {
+      toast.error("Trial Limit Reached", {
+        description:
+          "Please contact fanyicharllson@gmail.com to continue using AgileMentor AI",
+        duration: 5000,
+      });
+      return;
+    }
+
     // Validate content
     if (!content.trim()) {
       toast.error("Empty message", {
@@ -220,6 +325,21 @@ export function ChatInterface({
         ];
       });
 
+      // Update trial status with remaining messages
+      if (response.remainingMessages !== undefined) {
+        setTrialStatus((prev) =>
+          prev
+            ? {
+                ...prev,
+                messagesSent: prev.messagesSent + 1,
+                remainingMessages:
+                  response.remainingMessages ?? prev.remainingMessages,
+                hasReachedLimit: response.remainingMessages === 0,
+              }
+            : null
+        );
+      }
+
       // Clear optimistic flag after delay
       setTimeout(() => {
         setHasOptimisticMessages(false);
@@ -230,7 +350,7 @@ export function ChatInterface({
       // Remove optimistic message on error
       setMessages((prev) => prev.filter((msg) => msg.id !== userMessage.id));
       setHasOptimisticMessages(false);
-      
+
       // Toast is already shown by useSendMessage hook's onError
       // No need to show duplicate toast here
     } finally {
@@ -324,10 +444,17 @@ export function ChatInterface({
           </div>
         </div>
 
+        {/* Trial Status Banner - Show above chat input */}
+        {trialStatus && <TrialStatusBanner trialStatus={trialStatus} />}
+
         <ChatInput
           onSend={handleSendMessage}
-          disabled={isSending}
-          placeholder="Ask your Agile Coach..."
+          disabled={isSending || trialStatus?.hasReachedLimit || false}
+          placeholder={
+            trialStatus?.hasReachedLimit
+              ? "Trial limit reached - Contact us to continue"
+              : "Ask your Agile Coach..."
+          }
         />
       </div>
     </div>

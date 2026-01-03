@@ -54,8 +54,8 @@ export function ChatInput({ onSend, disabled = false, placeholder = "Ask your Ag
             placeholder={placeholder}
             disabled={disabled}
             rows={1}
-            className="flex-1 px-5 py-4 bg-transparent  border-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:outline-none disabled:opacity-50"
-            style={{ maxHeight: "150px" }}
+            className="flex-1 px-5 py-4 bg-transparent border-none text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-none focus:outline-none disabled:opacity-50 scrollbar-hide"
+            style={{ maxHeight: "150px", overflow: "auto" }}
           />
 
           <button
