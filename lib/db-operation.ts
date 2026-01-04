@@ -1,5 +1,21 @@
 import { prisma } from "./prisma";
-import { Role, SessionCategory } from "@prisma/client";
+
+// Define enum types locally to avoid Prisma client import issues
+type Role = "USER" | "ASSISTANT";
+type SessionCategory = "SPRINT_PLANNING" | "USER_STORIES" | "RETROSPECTIVE" | "DAILY_STANDUP" | "GENERAL";
+
+const RoleEnum = {
+  USER: "USER",
+  ASSISTANT: "ASSISTANT",
+} as const;
+
+const SessionCategoryEnum = {
+  SPRINT_PLANNING: "SPRINT_PLANNING",
+  USER_STORIES: "USER_STORIES",
+  RETROSPECTIVE: "RETROSPECTIVE",
+  DAILY_STANDUP: "DAILY_STANDUP",
+  GENERAL: "GENERAL",
+} as const;
 
 //? ==================== CACHE UTILITIES ====================
 
@@ -31,7 +47,7 @@ export async function createSession(data: {
   return await prisma.session.create({
     data: {
       title: data.title || "New Session",
-      category: data.category || SessionCategory.GENERAL,
+      category: data.category || (SessionCategoryEnum.GENERAL as any),
       userId: data.userId,
     },
     include: {
@@ -253,7 +269,7 @@ export async function createMessagePair(data: {
     const userMsg = await tx.message.create({
       data: {
         sessionId: data.sessionId,
-        role: Role.USER,
+        role: RoleEnum.USER as any,
         content: data.userMessage,
       },
     });
@@ -262,7 +278,7 @@ export async function createMessagePair(data: {
     const assistantMsg = await tx.message.create({
       data: {
         sessionId: data.sessionId,
-        role: Role.ASSISTANT,
+        role: RoleEnum.ASSISTANT as any,
         content: data.assistantMessage,
         metadata: data.metadata,
       },
@@ -359,7 +375,7 @@ export async function generateSessionTitle(sessionId: string) {
   const messages = await prisma.message.findFirst({
     where: {
       sessionId,
-      role: Role.USER,
+      role: RoleEnum.USER as any,
     },
     orderBy: { createdAt: "asc" },
   });
@@ -402,9 +418,9 @@ export async function getSessionStats(sessionId: string) {
 
   if (!session) return null;
 
-  const userMessages = session.messages.filter((m) => m.role === Role.USER);
+  const userMessages = session.messages.filter((m) => m.role === RoleEnum.USER);
   const assistantMessages = session.messages.filter(
-    (m) => m.role === Role.ASSISTANT
+    (m) => m.role === RoleEnum.ASSISTANT
   );
 
   const totalWords = session.messages.reduce(
