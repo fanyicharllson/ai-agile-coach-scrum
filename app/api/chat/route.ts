@@ -183,7 +183,7 @@ export async function GET(request: NextRequest) {
     const messages = await getSessionMessages(sessionId);
 
     return NextResponse.json({
-      messages: messages.map((msg) => ({
+      messages: messages.map((msg: any) => ({
         id: msg.id,
         role: msg.role.toLowerCase(),
         content: msg.content,
