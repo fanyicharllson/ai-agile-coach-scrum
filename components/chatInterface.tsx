@@ -312,7 +312,7 @@ export function ChatInterface({
 
       // Update messages: replace temp user message with real one, add assistant message
       setMessages((prev) => {
-        const filtered = prev.filter((msg) => msg.id !== userMessage.id);
+        const filtered = prev.filter((msg: any) => msg.id !== userMessage.id);
         return [
           ...filtered,
           {
@@ -348,7 +348,7 @@ export function ChatInterface({
       console.error("Error sending message:", error);
 
       // Remove optimistic message on error
-      setMessages((prev) => prev.filter((msg) => msg.id !== userMessage.id));
+      setMessages((prev) => prev.filter((msg: any) => msg.id !== userMessage.id));
       setHasOptimisticMessages(false);
 
       // Toast is already shown by useSendMessage hook's onError
@@ -427,7 +427,7 @@ export function ChatInterface({
               <EmptyState onSuggestionClick={handleSuggestionClick} />
             ) : (
               <>
-                {messages.map((message, index) => (
+                {messages.map((message: any, index: number) => (
                   <MessageBubble
                     key={index}
                     message={message}

@@ -418,13 +418,13 @@ export async function getSessionStats(sessionId: string) {
 
   if (!session) return null;
 
-  const userMessages = session.messages.filter((m) => m.role === RoleEnum.USER);
+  const userMessages = session.messages.filter((m: any) => m.role === RoleEnum.USER);
   const assistantMessages = session.messages.filter(
-    (m) => m.role === RoleEnum.ASSISTANT
+    (m: any) => m.role === RoleEnum.ASSISTANT
   );
 
   const totalWords = session.messages.reduce(
-    (acc, m) => acc + m.content.split(" ").length,
+    (acc: number, m: any) => acc + m.content.split(" ").length,
     0
   );
 

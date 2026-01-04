@@ -78,7 +78,7 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
 
         {/* Suggestions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          {suggestions.map((suggestion, index) => (
+          {suggestions.map((suggestion: any, index: number) => (
             <button
               key={index}
               onClick={() => onSuggestionClick(suggestion.prompt)}

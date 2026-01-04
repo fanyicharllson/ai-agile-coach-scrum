@@ -56,8 +56,8 @@ export function Sidebar({
     // Don't create session here - it will be created lazily when user sends first message
   };
 
-  const pinnedSessions = sessions?.filter((s) => s.isPinned) || [];
-  const recentSessions = sessions?.filter((s) => !s.isPinned) || [];
+  const pinnedSessions = sessions?.filter((s: any) => s.isPinned) || [];
+  const recentSessions = sessions?.filter((s: any) => !s.isPinned) || [];
 
   return (
     <>
@@ -236,7 +236,7 @@ function SessionSection({
               No sessions yet
             </p>
           ) : (
-            sessions.map((session) => (
+            sessions.map((session: any) => (
               <button
                 key={session.id}
                 onClick={() => onSessionSelect(session.id)}
