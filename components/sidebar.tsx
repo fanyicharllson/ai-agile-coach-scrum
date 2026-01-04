@@ -3,7 +3,6 @@
 import type React from "react";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { toast } from "sonner";
 import {
   ChevronRight,
   Plus,
