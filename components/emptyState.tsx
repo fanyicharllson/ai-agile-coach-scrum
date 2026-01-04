@@ -63,15 +63,15 @@ export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
             <Sparkles className="w-10 h-10 text-white" />
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-4xl max-md:text-2xl font-bold text-gray-900 dark:text-gray-100">
             {greeting},{" "}
             <span className="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
               {userName}
             </span>
-            ! 👋
+            !
           </h1>
 
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-lg max-md:text-sm text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             {dynamicMessage}
           </p>
         </div>

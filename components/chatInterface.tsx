@@ -142,10 +142,10 @@ export function ChatInterface({
       <div className="flex flex-col space-y-4 min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
         <div className="text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <h1 className="text-4xl text-[#0070B8] dark:text-[#00A3FF]">
+          <h1 className="text-4xl max-md:text-lg font-bold text-[#0070B8] dark:text-[#00A3FF]">
             AgileMentor AI!
           </h1>
-          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
             Just a sec please...
           </p>
         </div>
