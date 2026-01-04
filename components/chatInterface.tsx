@@ -412,7 +412,7 @@ export function ChatInterface({
           isOpen={sidebarOpen}
         />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto scrollbar-hide-mobile">
           <div className="max-w-4xl mx-auto px-6 py-10">
             {isLoadingMessages && messages.length === 0 ? (
               <div className="flex items-center justify-center h-64">

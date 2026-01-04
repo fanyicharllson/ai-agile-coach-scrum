@@ -203,6 +203,51 @@
   display: none; /* Chrome, Safari and Opera */
 }
 
+/* Hide scrollbar on mobile, show on desktop */
+.scrollbar-hide-mobile {
+  -ms-overflow-style: none; /* IE and Edge - mobile */
+  scrollbar-width: none; /* Firefox - mobile */
+}
+
+.scrollbar-hide-mobile::-webkit-scrollbar {
+  display: none; /* Chrome, Safari - mobile */
+}
+
+/* Show scrollbar on desktop (lg breakpoint and up) */
+@media (min-width: 1024px) {
+  .scrollbar-hide-mobile {
+    -ms-overflow-style: auto;
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-hide-mobile::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+  }
+  
+  .scrollbar-hide-mobile::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-hide-mobile::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  
+  .scrollbar-hide-mobile::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+  
+  /* Dark mode scrollbar */
+  .dark .scrollbar-hide-mobile::-webkit-scrollbar-thumb {
+    background: #475569;
+  }
+  
+  .dark .scrollbar-hide-mobile::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+}
+
 /* Clerk component centering */
 .cl-rootBox,
 .cl-card {
