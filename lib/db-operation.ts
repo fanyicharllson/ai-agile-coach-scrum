@@ -173,7 +173,7 @@ export async function createMessage(data: {
   metadata?: any;
 }) {
   // Create message and update session in a transaction
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: any) => {
     // Create the message
     const message = await tx.message.create({
       data: {
@@ -231,7 +231,7 @@ export async function updateMessage(messageId: string, content: string) {
  * Delete a message
  */
 export async function deleteMessage(messageId: string) {
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: any) => {
     // Get message to find session
     const message = await tx.message.findUnique({
       where: { id: messageId },
@@ -264,7 +264,7 @@ export async function createMessagePair(data: {
   assistantMessage: string;
   metadata?: any;
 }) {
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: any) => {
     // Create user message
     const userMsg = await tx.message.create({
       data: {
